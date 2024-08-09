@@ -1,6 +1,6 @@
-# Custom Emoji Replacer
+# GitHub Repo Card Block
 
-| **Description**       | Replace emojis with custom images in your site content.                              |
+| **Description**       | Display information about a GitHub repository in your posts or pages.                |
 | --------------------- | ------------------------------------------------------------------------------------ |
 | **Contributors**      | wolfpaw                                                                              |
 | **Donate link**       | [https://david.garden/plugins](https://david.garden/plugins)                         |
