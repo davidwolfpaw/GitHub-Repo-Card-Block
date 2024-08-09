@@ -16,7 +16,7 @@ function github_repo_card_block_register() {
 		'github-repo-card-block-editor-script',
 		plugins_url( 'block.js', __FILE__ ),
 		array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-		'1.0.0',
+		'1.1.0',
 		true
 	);
 
@@ -54,7 +54,7 @@ function github_repo_card_block_enqueue_styles() {
 		'github-repo-card-block-style',
 		plugins_url( 'style.css', __FILE__ ),
 		array(),
-		'1.0.0'
+		'1.1.0'
 	);
 }
 add_action( 'enqueue_block_assets', 'github_repo_card_block_enqueue_styles' );
