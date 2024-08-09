@@ -1,0 +1,56 @@
+.github-repo-card {
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 15px;
+	background-color: #f9f9f9;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.github-repo-card .repo-card-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.github-repo-card .repo-owner-avatar {
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	margin-right: 10px;
+}
+
+.github-repo-card .repo-title {
+	font-size: 1.5em;
+}
+
+.github-repo-card .repo-title a {
+	text-decoration: none;
+}
+
+.github-repo-card .repo-title a:hover {
+	text-decoration: underline;
+}
+
+.github-repo-card .repo-stats {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+	font-size: 0.75em;
+}
+
+.github-repo-card .repo-stat {
+	display: grid;
+	grid-template-columns: 24px auto;
+	grid-template-rows: repeat(2, auto);
+	align-items: center;
+}
+
+.github-repo-card .repo-stat .icon {
+	width: 16px;
+	height: 16px;
+}
+
+.github-repo-card .repo-stat .stat-name {
+	grid-area: 2 / 1 / 3 / 3;
+	justify-self: center;
+}
