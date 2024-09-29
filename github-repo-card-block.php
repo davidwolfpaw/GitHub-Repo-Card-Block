@@ -29,35 +29,30 @@ function github_repo_card_block_register() {
 		)
 	);
 
-	// Register the block with attributes and a render callback.
-	register_block_type(
-		'ghrc/github-repo-card',
-		array(
-			'editor_script'   => 'github-repo-card-block-editor-script',
-			'attributes'      => array(
-				'repoUrl' => array(
-					'type'    => 'string',
-					'default' => '',
-				),
-			),
-			'render_callback' => 'github_repo_card_block_render',
-		)
-	);
-}
-add_action( 'init', 'github_repo_card_block_register' );
-
-/**
- * Enqueues the styles for the GitHub Repo Card Block.
- */
-function github_repo_card_block_enqueue_styles() {
-	wp_enqueue_style(
+	wp_register_style(
 		'github-repo-card-block-style',
 		plugins_url( 'style.css', __FILE__ ),
 		array(),
 		'1.1.0'
 	);
+
+	// Register the block with attributes and a render callback.
+	register_block_type(
+		'ghrc/github-repo-card',
+		array(
+			'editor_script_handles' => array( 'github-repo-card-block-editor-script' ),
+			'style_handles'         => array( 'github-repo-card-block-style' ),
+			'attributes'            => array(
+				'repoUrl' => array(
+					'type'    => 'string',
+					'default' => '',
+				),
+			),
+			'render_callback'       => 'github_repo_card_block_render',
+		)
+	);
 }
-add_action( 'enqueue_block_assets', 'github_repo_card_block_enqueue_styles' );
+add_action( 'init', 'github_repo_card_block_register' );
 
 /**
  * Renders the GitHub Repo Card Block on the front end.
