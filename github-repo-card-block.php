@@ -7,6 +7,13 @@
  * Text Domain: ghrc
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+// Define plugin version
+define( 'GHRC_PLUGIN_VERSION', '1.1.0' );
+
 /**
  * Registers the GitHub Repo Card Block and enqueues the necessary editor script.
  */
@@ -16,7 +23,7 @@ function github_repo_card_block_register() {
 		'github-repo-card-block-editor-script',
 		plugins_url( 'block.js', __FILE__ ),
 		array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-		'1.1.0',
+		GHRC_PLUGIN_VERSION,
 		true
 	);
 
@@ -33,7 +40,7 @@ function github_repo_card_block_register() {
 		'github-repo-card-block-style',
 		plugins_url( 'style.css', __FILE__ ),
 		array(),
-		'1.1.0'
+		GHRC_PLUGIN_VERSION
 	);
 
 	// Register the block with attributes and a render callback.
