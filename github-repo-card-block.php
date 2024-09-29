@@ -71,8 +71,12 @@ function github_repo_card_block_render( $attributes ) {
 	// Validate and sanitize the repository URL.
 	$repo_url = $attributes['repoUrl'];
 	$repo_url = esc_url( $repo_url );
+
+	// Remove trailing slash from the repo url if it exists
+	$repo_url = untrailingslashit( $repo_url );
+
 	if ( empty( $repo_url ) || ! filter_var( $repo_url, FILTER_VALIDATE_URL ) ) {
-		if ( ! preg_match( '/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/', $repo_url ) ) {
+		if ( ! preg_match( '/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/', $repo_url ) ) {
 			return '<div class="github-repo-card">' . esc_html__( 'No valid GitHub repository URL provided.', 'ghrc' ) . '</div>';
 		}
 	}

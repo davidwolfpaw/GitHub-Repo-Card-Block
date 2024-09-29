@@ -61,8 +61,12 @@
 			// Function to validate the repository URL and fetch data from GitHub API
 			const validateRepo = async (repoUrl) => {
 				setLoading(true);
-				const regex = /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
-				if (!regex.test(repoUrl)) {
+
+				// Remove trailing slash from the repo url if it exists
+				const normalizedRepoUrl = repoUrl.endsWith('/') ? repoUrl.slice(0, -1) : repoUrl;
+
+				const regex = /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+				if (!regex.test(normalizedRepoUrl)) {
 					// If the URL is not valid, set an error message and reset attributes
 					setAttributes({ errorMessage: 'Please enter a valid GitHub repository URL.' });
 					setAttributes({
@@ -80,7 +84,7 @@
 					return;
 				}
 
-				const urlParts = repoUrl.split('/');
+				const urlParts = normalizedRepoUrl.split('/');
 				const owner = urlParts[urlParts.length - 2];
 				const repo = urlParts[urlParts.length - 1];
 
