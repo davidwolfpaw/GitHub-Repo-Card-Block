@@ -8,7 +8,7 @@
 | **Requires at least** | 5.0                                                                                  |
 | **Tested up to**      | 6.6                                                                                  |
 | **Requires PHP**      | 7.0                                                                                  |
-| **Stable tag**        | 1.1.0                                                                                |
+| **Stable tag**        | 1.2.0                                                                                |
 | **License**           | GPLv3 or later                                                                       |
 | **License URI**       | [http://www.gnu.org/licenses/gpl-3.0.html](http://www.gnu.org/licenses/gpl-3.0.html) |
 
@@ -56,6 +56,12 @@ The block is designed to work with public GitHub repositories. Ensure the reposi
 [GitHub SVGs from github.com](https://docs.github.com/en/site-policy/other-site-policies/github-logo-policy)
 
 ## Changelog
+
+### 1.2.0
+* Fixes trailing slash issue on repo URL
+* defines a constant for versioning
+* Removes deprecated block script handling
+* Adds toggles for repo stat display
 
 ### 1.1.0
 * Adds a transient of repo data to avoid repeated API calls

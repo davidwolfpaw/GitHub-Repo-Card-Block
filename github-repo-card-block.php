@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GitHub Repo Card Block
  * Description: A block to display a GitHub repository's information, including contributors, stars, forks, and more.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: FixUpFox
  * Text Domain: ghrc
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin version
-define( 'GHRC_PLUGIN_VERSION', '1.1.0' );
+define( 'GHRC_PLUGIN_VERSION', '1.2.0' );
 
 /**
  * Registers the GitHub Repo Card Block and enqueues the necessary editor script.
