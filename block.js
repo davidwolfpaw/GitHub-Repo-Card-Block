@@ -2,61 +2,82 @@
 	const { registerBlockType } = wp.blocks;
 	const { createElement: el, Fragment, useState, useEffect } = wp.element;
 	const { InspectorControls } = wp.blockEditor;
-	const { PanelBody, TextControl, Notice, Spinner } = wp.components;
+	const { PanelBody, TextControl, Notice, Spinner, ToggleControl } = wp.components;
 
 	// Register the GitHub Repo Card Block
 	registerBlockType('ghrc/github-repo-card', {
-		title: 'GitHub Repo Card Block', // Block title displayed in the block editor
-		icon: 'media-code', // Icon representing the block
-		category: 'embed', // Category in which the block will appear
+		title: 'GitHub Repo Card Block',
+		icon: 'media-code',
+		category: 'embed',
 		attributes: {
 			repoUrl: {
 				type: 'string',
-				default: '' // The GitHub repository URL
+				default: ''
 			},
 			repoName: {
 				type: 'string',
-				default: '' // The name of the repository
+				default: ''
 			},
 			ownerName: {
 				type: 'string',
-				default: '' // The username of the repository owner
+				default: ''
 			},
 			ownerAvatar: {
 				type: 'string',
-				default: '' // URL to the owner's avatar image
+				default: ''
 			},
 			description: {
 				type: 'string',
-				default: '' // Description of the repository
+				default: ''
 			},
 			stars: {
 				type: 'number',
-				default: 0 // Number of stars the repository has
+				default: 0
 			},
 			watchers: {
 				type: 'number',
-				default: 0 // Number of watchers the repository has
+				default: 0
 			},
 			forks: {
 				type: 'number',
-				default: 0 // Number of forks the repository has
+				default: 0
 			},
 			issues: {
 				type: 'number',
-				default: 0 // Number of open issues the repository has
+				default: 0
 			},
 			contributors: {
 				type: 'number',
-				default: 0 // Number of contributors to the repository
+				default: 0
+			},
+			showContributors: {
+				type: 'boolean',
+				default: true
+			},
+			showStars: {
+				type: 'boolean',
+				default: true
+			},
+			showWatchers: {
+				type: 'boolean',
+				default: true
+			},
+			showForks: {
+				type: 'boolean',
+				default: true
+			},
+			showIssues: {
+				type: 'boolean',
+				default: true
 			},
 			errorMessage: {
 				type: 'string',
-				default: '' // Error message if the repository is not found or another error occurs
+				default: ''
 			}
 		},
 		edit({ attributes, setAttributes }) {
-			const [loading, setLoading] = useState(false); // State to manage the loading spinner
+			// State to manage the loading spinner
+			const [loading, setLoading] = useState(false);
 
 			// Function to validate the repository URL and fetch data from GitHub API
 			const validateRepo = async (repoUrl) => {
@@ -154,6 +175,35 @@
 							status: 'error',
 							isDismissible: false,
 						}, attributes.errorMessage)
+					),
+					el(
+						PanelBody,
+						{ title: 'Display Options', initialOpen: false },
+						el(ToggleControl, {
+							label: 'Show Contributors',
+							checked: attributes.showContributors,
+							onChange: (value) => setAttributes({ showContributors: value })
+						}),
+						el(ToggleControl, {
+							label: 'Show Stars',
+							checked: attributes.showStars,
+							onChange: (value) => setAttributes({ showStars: value })
+						}),
+						el(ToggleControl, {
+							label: 'Show Watchers',
+							checked: attributes.showWatchers,
+							onChange: (value) => setAttributes({ showWatchers: value })
+						}),
+						el(ToggleControl, {
+							label: 'Show Forks',
+							checked: attributes.showForks,
+							onChange: (value) => setAttributes({ showForks: value })
+						}),
+						el(ToggleControl, {
+							label: 'Show Issues',
+							checked: attributes.showIssues,
+							onChange: (value) => setAttributes({ showIssues: value })
+						})
 					)
 				),
 				el(
@@ -168,27 +218,27 @@
 							el('p', null, el('strong', null, 'Owner: '), attributes.ownerName),
 							el('p', null, el('strong', null, 'Description: '), attributes.description),
 							el('div', { className: 'repo-stats' },
-								el('span', { className: 'repo-stat' },
+								attributes.showContributors && el('span', { className: 'repo-stat' },
 									el('img', { src: `${ghrc_plugin.pluginUrl}images/contributor.svg`, className: 'icon', alt: 'Contributors' }),
 									` ${attributes.contributors}`,
 									el('span', { className: 'stat-name' }, ' Contributors')
 								),
-								el('span', { className: 'repo-stat' },
+								attributes.showStars && el('span', { className: 'repo-stat' },
 									el('img', { src: `${ghrc_plugin.pluginUrl}images/star.svg`, className: 'icon', alt: 'Stars' }),
 									` ${attributes.stars}`,
 									el('span', { className: 'stat-name' }, ' Stars')
 								),
-								el('span', { className: 'repo-stat' },
+								attributes.showWatchers && el('span', { className: 'repo-stat' },
 									el('img', { src: `${ghrc_plugin.pluginUrl}images/watch.svg`, className: 'icon', alt: 'Watchers' }),
 									` ${attributes.watchers}`,
 									el('span', { className: 'stat-name' }, ' Watchers')
 								),
-								el('span', { className: 'repo-stat' },
+								attributes.showForks && el('span', { className: 'repo-stat' },
 									el('img', { src: `${ghrc_plugin.pluginUrl}images/fork.svg`, className: 'icon', alt: 'Forks' }),
 									` ${attributes.forks}`,
 									el('span', { className: 'stat-name' }, ' Forks')
 								),
-								el('span', { className: 'repo-stat' },
+								attributes.showIssues && el('span', { className: 'repo-stat' },
 									el('img', { src: `${ghrc_plugin.pluginUrl}images/issue.svg`, className: 'icon', alt: 'Issues' }),
 									` ${attributes.issues}`,
 									el('span', { className: 'stat-name' }, ' Issues')

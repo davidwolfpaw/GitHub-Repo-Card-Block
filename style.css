@@ -33,7 +33,7 @@
 
 .github-repo-card .repo-stats {
 	display: flex;
-	justify-content: space-between;
+	gap: 30px;
 	margin-top: 10px;
 	font-size: 0.75em;
 }

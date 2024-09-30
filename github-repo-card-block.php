@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GitHub Repo Card Block
  * Description: A block to display a GitHub repository's information, including contributors, stars, forks, and more.
- * Version: 1.0
+ * Version: 1.1.0
  * Author: FixUpFox
  * Text Domain: ghrc
  */
@@ -47,15 +47,35 @@ function github_repo_card_block_register() {
 	register_block_type(
 		'ghrc/github-repo-card',
 		array(
-			'editor_script_handles' => array( 'github-repo-card-block-editor-script' ),
-			'style_handles'         => array( 'github-repo-card-block-style' ),
-			'attributes'            => array(
-				'repoUrl' => array(
+			'editor_script'   => 'github-repo-card-block-editor-script',
+			'style'           => 'github-repo-card-block-style',
+			'attributes'      => array(
+				'repoUrl'          => array(
 					'type'    => 'string',
 					'default' => '',
 				),
+				'showContributors' => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
+				'showStars'        => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
+				'showWatchers'     => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
+				'showForks'        => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
+				'showIssues'       => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
 			),
-			'render_callback'       => 'github_repo_card_block_render',
+			'render_callback' => 'github_repo_card_block_render',
 		)
 	);
 }
@@ -69,16 +89,13 @@ add_action( 'init', 'github_repo_card_block_register' );
  */
 function github_repo_card_block_render( $attributes ) {
 	// Validate and sanitize the repository URL.
-	$repo_url = $attributes['repoUrl'];
-	$repo_url = esc_url( $repo_url );
+	$repo_url = esc_url( $attributes['repoUrl'] );
 
-	// Remove trailing slash from the repo url if it exists
+	// Remove trailing slash from the repo URL if it exists
 	$repo_url = untrailingslashit( $repo_url );
 
 	if ( empty( $repo_url ) || ! filter_var( $repo_url, FILTER_VALIDATE_URL ) ) {
-		if ( ! preg_match( '/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/', $repo_url ) ) {
-			return '<div class="github-repo-card">' . esc_html__( 'No valid GitHub repository URL provided.', 'ghrc' ) . '</div>';
-		}
+		return '<div class="github-repo-card">' . esc_html__( 'No valid GitHub repository URL provided.', 'ghrc' ) . '</div>';
 	}
 
 	// Generate a transient key based on the repository URL
@@ -135,30 +152,56 @@ function github_repo_card_block_render( $attributes ) {
 	        </div>
 	        <p><strong>' . esc_html__( 'Owner:', 'ghrc' ) . '</strong> %3$s</p>
 	        <p><strong>' . esc_html__( 'Description:', 'ghrc' ) . '</strong> %5$s</p>
-	        <div class="repo-stats">
-	            <span class="repo-stat"><img src="%11$s" class="icon" alt="' . esc_attr__( 'Contributors', 'ghrc' ) . '"/> %6$s<span class="stat-name">' . esc_html__( 'Contributors', 'ghrc' ) . '</span></span>
-	            <span class="repo-stat"><img src="%12$s" class="icon" alt="' . esc_attr__( 'Stars', 'ghrc' ) . '"/> %7$s<span class="stat-name">' . esc_html__( 'Stars', 'ghrc' ) . '</span></span>
-	            <span class="repo-stat"><img src="%13$s" class="icon" alt="' . esc_attr__( 'Watchers', 'ghrc' ) . '"/> %8$s<span class="stat-name">' . esc_html__( 'Watchers', 'ghrc' ) . '</span></span>
-	            <span class="repo-stat"><img src="%14$s" class="icon" alt="' . esc_attr__( 'Forks', 'ghrc' ) . '"/> %9$s<span class="stat-name">' . esc_html__( 'Forks', 'ghrc' ) . '</span></span>
-	            <span class="repo-stat"><img src="%15$s" class="icon" alt="' . esc_attr__( 'Issues', 'ghrc' ) . '"/> %10$s<span class="stat-name">' . esc_html__( 'Issues', 'ghrc' ) . '</span></span>
-	        </div>
-	    </div>',
+	        <div class="repo-stats">',
 		esc_url( $repo_data['html_url'] ),
 		esc_html( $repo_data['name'] ),
 		esc_html( $repo_data['owner']['login'] ),
 		esc_url( $repo_data['owner']['avatar_url'] ),
-		esc_html( $repo_data['description'] ),
-		esc_html( $repo_data['contributors_count'] ),
-		esc_html( $repo_data['stargazers_count'] ),
-		esc_html( $repo_data['watchers_count'] ),
-		esc_html( $repo_data['forks_count'] ),
-		esc_html( $repo_data['open_issues_count'] ),
-		esc_url( plugins_url( 'images/contributor.svg', __FILE__ ) ),
-		esc_url( plugins_url( 'images/star.svg', __FILE__ ) ),
-		esc_url( plugins_url( 'images/watch.svg', __FILE__ ) ),
-		esc_url( plugins_url( 'images/fork.svg', __FILE__ ) ),
-		esc_url( plugins_url( 'images/issue.svg', __FILE__ ) )
+		esc_html( $repo_data['description'] )
 	);
+
+	// Conditional rendering based on toggle attributes
+	if ( $attributes['showContributors'] ) {
+		$output .= sprintf(
+			'<span class="repo-stat"><img src="%1$s" class="icon" alt="' . esc_attr__( 'Contributors', 'ghrc' ) . '"/> %2$s<span class="stat-name">' . esc_html__( 'Contributors', 'ghrc' ) . '</span></span>',
+			esc_url( plugins_url( 'images/contributor.svg', __FILE__ ) ),
+			esc_html( $repo_data['contributors_count'] )
+		);
+	}
+
+	if ( $attributes['showStars'] ) {
+		$output .= sprintf(
+			'<span class="repo-stat"><img src="%1$s" class="icon" alt="' . esc_attr__( 'Stars', 'ghrc' ) . '"/> %2$s<span class="stat-name">' . esc_html__( 'Stars', 'ghrc' ) . '</span></span>',
+			esc_url( plugins_url( 'images/star.svg', __FILE__ ) ),
+			esc_html( $repo_data['stargazers_count'] )
+		);
+	}
+
+	if ( $attributes['showWatchers'] ) {
+		$output .= sprintf(
+			'<span class="repo-stat"><img src="%1$s" class="icon" alt="' . esc_attr__( 'Watchers', 'ghrc' ) . '"/> %2$s<span class="stat-name">' . esc_html__( 'Watchers', 'ghrc' ) . '</span></span>',
+			esc_url( plugins_url( 'images/watch.svg', __FILE__ ) ),
+			esc_html( $repo_data['watchers_count'] )
+		);
+	}
+
+	if ( $attributes['showForks'] ) {
+		$output .= sprintf(
+			'<span class="repo-stat"><img src="%1$s" class="icon" alt="' . esc_attr__( 'Forks', 'ghrc' ) . '"/> %2$s<span class="stat-name">' . esc_html__( 'Forks', 'ghrc' ) . '</span></span>',
+			esc_url( plugins_url( 'images/fork.svg', __FILE__ ) ),
+			esc_html( $repo_data['forks_count'] )
+		);
+	}
+
+	if ( $attributes['showIssues'] ) {
+		$output .= sprintf(
+			'<span class="repo-stat"><img src="%1$s" class="icon" alt="' . esc_attr__( 'Issues', 'ghrc' ) . '"/> %2$s<span class="stat-name">' . esc_html__( 'Issues', 'ghrc' ) . '</span></span>',
+			esc_url( plugins_url( 'images/issue.svg', __FILE__ ) ),
+			esc_html( $repo_data['open_issues_count'] )
+		);
+	}
+
+	$output .= '</div></div>';
 
 	return $output;
 }
