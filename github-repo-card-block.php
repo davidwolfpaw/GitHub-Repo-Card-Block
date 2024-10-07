@@ -19,7 +19,7 @@ define( 'GHRC_PLUGIN_VERSION', '1.2.1' );
  * Pings the Github repo that hosts the plugin to check for updates.
  * Props Jack Whitworth https://jackwhitworth.com/blog/hosting-updateable-wordpress-plugins-on-github/
  */
-function prismpress_check_for_plugin_update( $transient ) {
+function ghrc_check_for_plugin_update( $transient ) {
 	// If no update transient or transient is empty, return.
 	if ( empty( $transient->checked ) ) {
 		return $transient;
@@ -52,7 +52,7 @@ function prismpress_check_for_plugin_update( $transient ) {
 
 	return $transient;
 }
-add_filter( 'pre_set_site_transient_update_plugins', 'prismpress_check_for_plugin_update' );
+add_filter( 'pre_set_site_transient_update_plugins', 'ghrc_check_for_plugin_update' );
 
 
 /**
